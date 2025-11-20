@@ -2,16 +2,21 @@ import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import { useState } from "react";
 
-export default function CompleteProfile() {
+export default function CompleteProfile({ onComplete }) {
   const { user } = useUser();
   const [role, setRole] = useState("");
 
   const saveRole = async () => {
+    if (!role) {
+      alert("Please select a role");
+      return;
+    }
+
     await user.update({
-      publicMetadata: { role }
+      unsafeMetadata: { role }
     });
 
-    window.location.href = "/dashboard";
+    onComplete();
   };
 
   return (
